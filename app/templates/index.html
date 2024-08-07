@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        async function submitForm(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (result.error) {
+                document.getElementById('result').innerText = `Error: ${result.error}`;
+            } else {
+                document.getElementById('result').innerText = `Recommended Crop: ${result.crop}`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Crop Recommendation</h1>
+        <form onsubmit="submitForm(event)" class="mt-3">
+            <div class="form-group">
+                <label for="N">Nitrogen (N):</label>
+                <input type="text" id="N" name="N" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="P">Phosphorus (P):</label>
+                <input type="text" id="P" name="P" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="K">Potassium (K):</label>
+                <input type="text" id="K" name="K" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="temperature">Temperature:</label>
+                <input type="text" id="temperature" name="temperature" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="humidity">Humidity:</label>
+                <input type="text" id="humidity" name="humidity" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="ph">pH:</label>
+                <input type="text" id="ph" name="ph" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="rainfall">Rainfall:</label>
+                <input type="text" id="rainfall" name="rainfall" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Predict</button>
+        </form>
+        <div id="result" class="mt-3"></div>
+    </div>
+</body>
+</html> 
